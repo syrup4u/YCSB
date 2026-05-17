@@ -32,6 +32,7 @@ import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
 import com.datastax.driver.core.querybuilder.Update;
+import com.datastax.driver.core.policies.RoundRobinPolicy;
 import site.ycsb.ByteArrayByteIterator;
 import site.ycsb.ByteIterator;
 import site.ycsb.DB;
@@ -179,6 +180,7 @@ public class CassandraCQLClient extends DB {
 
         if ((username != null) && !username.isEmpty()) {
           Cluster.Builder clusterBuilder = Cluster.builder().withCredentials(username, password)
+              .withLoadBalancingPolicy(new RoundRobinPolicy())
               .withPort(Integer.valueOf(port)).addContactPoints(hosts);
           if (useSSL) {
             clusterBuilder = clusterBuilder.withSSL();
@@ -186,6 +188,7 @@ public class CassandraCQLClient extends DB {
           cluster = clusterBuilder.build();
         } else {
           cluster = Cluster.builder().withPort(Integer.valueOf(port))
+              .withLoadBalancingPolicy(new RoundRobinPolicy())
               .addContactPoints(hosts).build();
         }
 

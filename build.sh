@@ -1,0 +1,1 @@
+mvn -pl site.ycsb:cassandra-binding -am clean package
